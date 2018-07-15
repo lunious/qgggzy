@@ -8,8 +8,8 @@
 import scrapy
 
 
-# 全国公共交易平台(四川)-四川省
-class ScggzyItem(scrapy.Item):
+# 四川省
+class SichuanItem(scrapy.Item):
     reportTitle = scrapy.Field()
     sysTime = scrapy.Field()
     url = scrapy.Field()

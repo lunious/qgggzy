@@ -8,7 +8,7 @@
 from scrapy import signals
 import random
 
-class ScggzySpiderMiddleware(object):
+class QgggzySpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -56,12 +56,12 @@ class ScggzySpiderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class ScggzyDownloaderMiddleware(object):
+class QgggzyDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
     def __init__(self, crawler):
-        super(ScggzyDownloaderMiddleware, self).__init__()
+        super(QgggzyDownloaderMiddleware, self).__init__()
         self.proxy = crawler.settings.get('MY_PROXY')
         self.user_agent = crawler.settings.get('MY_USER_AGENT')
 

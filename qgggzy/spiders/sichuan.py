@@ -3,11 +3,11 @@ import scrapy
 import datetime
 import json
 import time
-from scggzy.items import ScggzyItem
+from qgggzy.items import SichuanItem
 from scrapy.selector import Selector
 
 class ScsSpider(scrapy.Spider):
-    name = 'scggzy'
+    name = 'sichuan'
     allowed_domains = ['scggzy.gov.cn']
     page = 1
     now_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -15,7 +15,7 @@ class ScsSpider(scrapy.Spider):
     timeArray = time.strptime(now_time, "%Y-%m-%d %H:%M:%S")
     # 转换成时间戳
     timestamp = int(time.mktime(timeArray))
-    url = 'http://www.scggzy.gov.cn/Info/GetInfoListNew?keywords=&times=1&timesStart=&timesEnd=&province=&area=&businessType=project&informationType=TenderCandidateAnnounce&industryType='
+    url = 'http://www.scggzy.gov.cn/Info/GetInfoListNew?keywords=&times=2&timesStart=&timesEnd=&province=&area=&businessType=project&informationType=TenderCandidateAnnounce&industryType='
     start_urls = [url + '&page=' + str(page) + '&parm=' + str(timestamp)]
 
     def parse(self, response):
@@ -25,7 +25,7 @@ class ScsSpider(scrapy.Spider):
             pageCount = js['pageCount']
             items = []
             for each in data:
-                item = ScggzyItem()
+                item = SichuanItem()
                 item['reportTitle'] = each['Title']
                 item['sysTime'] = each['CreateDateStr']
                 item['url'] = 'http://www.scggzy.gov.cn' + each['Link']

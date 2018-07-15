@@ -7,10 +7,10 @@
 import json
 import logging
 import pymysql
-from scggzy import settings
+from qgggzy import settings
 
-# 全国公共交易网（四川）
-class ScggzyPipeline(object):
+# 四川省
+class SichuanPipeline(object):
 
     def __init__(self):
         self.connect = pymysql.connect(
