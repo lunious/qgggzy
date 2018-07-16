@@ -9,25 +9,18 @@ class QuanguoSpider(scrapy.Spider):
     url = 'http://deal.ggzy.gov.cn/ds/deal/dealList.jsp'
     page = 1
     heard = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-        'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
-        'Host': 'deal.ggzy.gov.cn',
-        'Content - Length': '226',
-        'Cache - Control': 'max - age = 0',
-        'Origin': 'http: // deal.ggzy.gov.cn',
-        'Upgrade - Insecure - Requests': '1',
-        'Content - Type': 'application / x - www - form - urlencoded',
-        'Accept - Encoding': 'gzip, deflate',
-        'Connection': 'keep - alive',
-
+        'Accept-Language': 'zh,en-US;q=0.9,en;q=0.8,zh-CN;q=0.7',
+        'Cache-Control': 'max-age=0',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
     }
 
     def start_requests(self):
         yield scrapy.FormRequest(url=self.url, method='POST', headers=self.heard,
-                                 formdata={'TIMEBEGIN_SHOW': '2018-04-15', 'TIMEEND_SHOW': '2018-07-15',
-                                           'TIMEBEGIN': '2018-04-15',
-                                           'TIMEEND': '2018-07-15', 'DEAL_TIME': '04',
+                                 formdata={'TIMEBEGIN_SHOW': '2018-04-16', 'TIMEEND_SHOW': '2018-07-16',
+                                           'TIMEBEGIN': '2018-04-16',
+                                           'TIMEEND': '2018-07-16', 'DEAL_TIME': '04',
                                            'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '0',
                                            'DEAL_CITY': '0',
                                            'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
