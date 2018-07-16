@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from qgggzy.items import QuanguoItem
+from scrapy.selector import Selector
 
 
 class QuanguoSpider(scrapy.Spider):
@@ -21,7 +22,7 @@ class QuanguoSpider(scrapy.Spider):
                                  formdata={'TIMEBEGIN_SHOW': '2018-04-16', 'TIMEEND_SHOW': '2018-07-16',
                                            'TIMEBEGIN': '2018-04-16',
                                            'TIMEEND': '2018-07-16', 'DEAL_TIME': '04',
-                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '0',
+                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '0',
                                            'DEAL_CITY': '0',
                                            'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
                                            'PAGENUMBER': str(self.page), 'FINDTXT': ''},
@@ -67,10 +68,8 @@ class QuanguoSpider(scrapy.Spider):
             url = each.xpath('.//h4/a/@href').extract()
             if url:
                 item['url'] = url[0]
-                item['showUrl'] = url[0]
             else:
                 item['url'] = ''
-                item['showUrl'] = ''
             items.append(item)
 
         for item in items:
@@ -86,5 +85,11 @@ class QuanguoSpider(scrapy.Spider):
         #                          callback=self.parse)
 
     def detail_parse(self, response):
+        item = response.meta['meta']
+        entryName = response.xpath('//div[@class="fully"]//div[@id="div_0201"]//li/a/@title').extract()
+        if entryName:
+            item['entryName'] = entryName[0]
+        else:
+            item['entryName'] = ''
         item = response.meta['meta']
         yield item
