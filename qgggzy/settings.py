@@ -70,7 +70,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'qgggzy.pipelines.SichuanPipeline': 300,
+   # 'qgggzy.pipelines.SichuanPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -107,7 +107,7 @@ MYSQL_PORT = 8080
 # MYSQL_PORT = 3306
 
 MY_PROXY = [
-    'http://115.223.244.158:9000',
+    'http://182.140.138.20',
 ]
 MY_USER_AGENT = [
     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
