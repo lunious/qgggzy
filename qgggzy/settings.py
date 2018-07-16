@@ -70,7 +70,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   # 'qgggzy.pipelines.SichuanPipeline': 300,
+   'qgggzy.pipelines.SichuanPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
