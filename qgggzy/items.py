@@ -8,8 +8,8 @@
 import scrapy
 
 
-# 四川省
-class SichuanItem(scrapy.Item):
+# 四川省(中标公示)
+class SichuanGSItem(scrapy.Item):
     reportTitle = scrapy.Field()
     sysTime = scrapy.Field()
     url = scrapy.Field()
@@ -35,6 +35,18 @@ class SichuanItem(scrapy.Item):
     oneScore = scrapy.Field()
     count = scrapy.Field()
     treeCount = scrapy.Field()
+
+# 四川省（结果公告）
+class SichuanGGItem(scrapy.Item):
+    reportTitle = scrapy.Field()
+    url = scrapy.Field()
+    resource = scrapy.Field()
+    sysTime = scrapy.Field()
+    entryName = scrapy.Field()
+    entryNum = scrapy.Field()
+    purchasingType = scrapy.Field()
+    Purchaser = scrapy.Field()
+    purchasingAgent = scrapy.Field()
 
 # 全国
 class QuanguoItem(scrapy.Item):

@@ -3,11 +3,11 @@ import scrapy
 import datetime
 import json
 import time
-from qgggzy.items import SichuanItem
+from qgggzy.items import SichuanGSItem
 from scrapy.selector import Selector
 
 class ScsSpider(scrapy.Spider):
-    name = 'sichuan'
+    name = 'sichuan_gs'
     allowed_domains = ['scggzy.gov.cn']
     page = 1
     now_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -25,7 +25,7 @@ class ScsSpider(scrapy.Spider):
             pageCount = js['pageCount']
             items = []
             for each in data:
-                item = SichuanItem()
+                item = SichuanGSItem()
                 item['reportTitle'] = each['Title']
                 item['sysTime'] = each['CreateDateStr']
                 item['url'] = 'http://www.scggzy.gov.cn' + each['Link']
@@ -319,3 +319,10 @@ class ScsSpider(scrapy.Spider):
             else:
                 item['treeCount'] = 0
             yield item
+
+
+        # if len(ltr) > 4:
+        #     if Selector(text=res[0].strip()).xpath('//div[@class="tablediv"]/table[2]/tbody[1]//th[1]'):
+        #         for i in Selector(text=res[0].strip()).xpath('//div[@class="tablediv"]/table[2]/tbody[1]/tr'):
+        #             print(i.xpath('.//th[1]/text()').extract()[0])
+

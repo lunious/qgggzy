@@ -2,6 +2,7 @@
 import scrapy
 from qgggzy.items import QuanguoItem
 from scrapy.selector import Selector
+from scrapy_splash import SplashRequest
 
 
 class QuanguoSpider(scrapy.Spider):
@@ -24,19 +25,23 @@ class QuanguoSpider(scrapy.Spider):
     def parse(self, response):
         # 响应Cookies
         Cookie1 = response.headers.getlist('Set-Cookie')  # 查看一下响应Cookie，也就是第一次访问注册页面时后台写入浏览器的Cookie
-        print('Cookie1==', Cookie1)
+        # print('Cookie1==', Cookie1)
 
-        yield scrapy.FormRequest(url=self.url, method='POST', meta={'cookiejar': response.meta['cookiejar']}, headers=self.header, formdata={'TIMEBEGIN_SHOW': '2018-04-17', 'TIMEEND_SHOW': '2018-07-17', 'TIMEBEGIN': '2018-04-17',
-               'TIMEEND': '2018-07-17', 'DEAL_TIME': '04',
-               'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '0', 'DEAL_CITY': '0',
-               'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0', 'PAGENUMBER': str(self.page), 'FINDTXT': ''},
+        yield scrapy.FormRequest(url=self.url, method='POST', meta={'cookiejar': response.meta['cookiejar']},
+                                 headers=self.header,
+                                 formdata={'TIMEBEGIN_SHOW': '2018-04-17', 'TIMEEND_SHOW': '2018-07-17',
+                                           'TIMEBEGIN': '2018-04-17',
+                                           'TIMEEND': '2018-07-17', 'DEAL_TIME': '04',
+                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '0',
+                                           'DEAL_CITY': '0',
+                                           'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
+                                           'PAGENUMBER': str(self.page), 'FINDTXT': ''},
                                  callback=self.begin_parse)
 
-
-    def begin_parse(self,response):
-         # 请求Cookie
+    def begin_parse(self, response):
+        # 请求Cookie
         Cookie2 = response.request.headers.getlist('Cookie')
-        print('Cookie2==', Cookie2)
+        # print('Cookie2==', Cookie2)
         items = []
         pageCount = response.xpath('//div[@class="paging"]/span/text()').extract()[0][1:-1]
         for each in response.xpath('//*[@id="publicl"]/div[@class="publicont"]'):
@@ -76,12 +81,13 @@ class QuanguoSpider(scrapy.Spider):
                 item['url'] = url[0]
             else:
                 item['url'] = ''
-            # items.append(item)
-            yield item
-        # for item in items:
-        #     yield scrapy.Request(url=item['url'], headers=self.header, meta={'meta': item}, callback=self.detail_parse)
-
-        #请求下一页
+            items.append(item)
+            # yield item
+        for item in items:
+            # yield scrapy.Request(url=item['url'], headers=self.header, meta={'meta': item}, callback=self.detail_parse)
+            yield SplashRequest(url=item['url'], args={'timeout', 10}, headers=self.header, meta={'meta': item},
+                                callback=self.detail_parse)
+        # 请求下一页
         # if self.page < int(pageCount):
         #     self.page += 1
         #
@@ -91,19 +97,17 @@ class QuanguoSpider(scrapy.Spider):
         #        'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0', 'PAGENUMBER': str(self.page), 'FINDTXT': ''},
         #                          callback=self.begin_parse)
 
-    # def detail_parse(self, response):
-    #     # print(response.body)
-    #     Cookie3 = response.headers.getlist('Set-Cookie')
-    #     print('Cookie3==', Cookie3)
-    #     Cookie4 = response.request.headers.getlist('Cookie')
-    #     print('Cookie4==', Cookie4)
-    #     item = response.meta['meta']
-    #     entryName = response.xpath('//div[@class="fully"]//div[@id="div_0201"]//li/a/@title').extract()
-    #     if entryName:
-    #         item['entryName'] = entryName[0]
-    #     else:
-    #         item['entryName'] = ''
-    #     yield item
-
-
-
+    def detail_parse(self, response):
+        # item = response.meta['meta']
+        print(response.xpath('//div[@class="fully'))
+        # Cookie3 = response.headers.getlist('Set-Cookie')
+        # print('Cookie3==', Cookie3)
+        # Cookie4 = response.request.headers.getlist('Cookie')
+        # print('Cookie4==', Cookie4)
+        # item = response.meta['meta']
+        # entryName = response.xpath('//div[@class="fully"]//div[@id="div_0201"]//li/a/@title').extract()
+        # if entryName:
+        #     item['entryName'] = entryName[0]
+        # else:
+        #     item['entryName'] = ''
+        # yield item

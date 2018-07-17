@@ -3,7 +3,7 @@ import time
 import os
 
 min = [
-    'scrapy crawl sichuan',
+    'scrapy crawl sichuan_gs',
     'scrapy crawl quanguo',
 ]
 # cmdline.execute(min[0].split())
