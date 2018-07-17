@@ -3,7 +3,9 @@ import scrapy
 from qgggzy.items import QuanguoItem
 from scrapy.selector import Selector
 from scrapy_splash import SplashRequest
-
+from selenium import webdriver
+from scrapy.xlib.pydispatch import dispatcher
+from scrapy import signals
 
 class QuanguoSpider(scrapy.Spider):
     name = 'quanguo'
@@ -19,13 +21,20 @@ class QuanguoSpider(scrapy.Spider):
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
     }
 
+    def __init__(self):
+        self.browser = webdriver.Chrome(executable_path='C:\demo\PY\qgggzy\chromedriver.exe')
+        super(QuanguoSpider,self).__init__()
+        dispatcher.connect(self.close,signals.spider_closed)
+
+    def close(self,spider):
+        #当爬虫推出的时候关闭chrome
+        print('spider closed')
+        self.browser.quit()
+
     def start_requests(self):
         yield scrapy.Request(url=self.url, headers=self.header, meta={'cookiejar': 1}, callback=self.parse)
 
     def parse(self, response):
-        # 响应Cookies
-        Cookie1 = response.headers.getlist('Set-Cookie')  # 查看一下响应Cookie，也就是第一次访问注册页面时后台写入浏览器的Cookie
-        # print('Cookie1==', Cookie1)
 
         yield scrapy.FormRequest(url=self.url, method='POST', meta={'cookiejar': response.meta['cookiejar']},
                                  headers=self.header,
@@ -39,9 +48,6 @@ class QuanguoSpider(scrapy.Spider):
                                  callback=self.begin_parse)
 
     def begin_parse(self, response):
-        # 请求Cookie
-        Cookie2 = response.request.headers.getlist('Cookie')
-        # print('Cookie2==', Cookie2)
         items = []
         pageCount = response.xpath('//div[@class="paging"]/span/text()').extract()[0][1:-1]
         for each in response.xpath('//*[@id="publicl"]/div[@class="publicont"]'):
@@ -82,11 +88,10 @@ class QuanguoSpider(scrapy.Spider):
             else:
                 item['url'] = ''
             items.append(item)
-            # yield item
         for item in items:
-            # yield scrapy.Request(url=item['url'], headers=self.header, meta={'meta': item}, callback=self.detail_parse)
-            yield SplashRequest(url=item['url'], args={'timeout', 10}, headers=self.header, meta={'meta': item},
-                                callback=self.detail_parse)
+            yield scrapy.Request(url=item['url'], headers=self.header, meta={'meta': item}, callback=self.detail_parse)
+            # yield SplashRequest(url=item['url'], args={'timeout', 10}, headers=self.header, meta={'meta': item},
+            #                     callback=self.detail_parse)
         # 请求下一页
         # if self.page < int(pageCount):
         #     self.page += 1
@@ -98,16 +103,10 @@ class QuanguoSpider(scrapy.Spider):
         #                          callback=self.begin_parse)
 
     def detail_parse(self, response):
-        # item = response.meta['meta']
-        print(response.xpath('//div[@class="fully'))
-        # Cookie3 = response.headers.getlist('Set-Cookie')
-        # print('Cookie3==', Cookie3)
-        # Cookie4 = response.request.headers.getlist('Cookie')
-        # print('Cookie4==', Cookie4)
-        # item = response.meta['meta']
-        # entryName = response.xpath('//div[@class="fully"]//div[@id="div_0201"]//li/a/@title').extract()
-        # if entryName:
-        #     item['entryName'] = entryName[0]
-        # else:
-        #     item['entryName'] = ''
-        # yield item
+        item = response.meta['meta']
+        entryName = response.xpath('//div[@class="detail"]/h4[@class="h4_o"]/text()').extract()
+        if entryName:
+            item['entryName'] = entryName[0]
+        else:
+            item['entryName'] = ''
+        yield item

@@ -62,6 +62,7 @@ DOWNLOADER_MIDDLEWARES = {
    'scrapy_splash.SplashCookiesMiddleware': 723,
    'scrapy_splash.SplashMiddleware': 725,
    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+   'qgggzy.middlewares.JSPageMiddleware': 600,
 }
 # Splash服务器地址
 SPLASH_URL = 'http://localhost:8050'
