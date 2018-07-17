@@ -14,6 +14,7 @@ class QuanguoSpider(scrapy.Spider):
         'Accept-Language': 'zh,en-US;q=0.9,en;q=0.8,zh-CN;q=0.7',
         'Cache-Control': 'max-age=0',
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Connection': 'keep - alive',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
     }
 
@@ -21,16 +22,21 @@ class QuanguoSpider(scrapy.Spider):
         yield scrapy.Request(url=self.url, headers=self.header, meta={'cookiejar': 1}, callback=self.parse)
 
     def parse(self, response):
-        yield scrapy.FormRequest(url=self.url, method='POST', headers=self.header, formdata={'TIMEBEGIN_SHOW': '2018-04-16', 'TIMEEND_SHOW': '2018-07-16', 'TIMEBEGIN': '2018-04-16',
-               'TIMEEND': '2018-07-16', 'DEAL_TIME': '04',
+        # 响应Cookies
+        Cookie1 = response.headers.getlist('Set-Cookie')  # 查看一下响应Cookie，也就是第一次访问注册页面时后台写入浏览器的Cookie
+        print('Cookie1==', Cookie1)
+
+        yield scrapy.FormRequest(url=self.url, method='POST', meta={'cookiejar': response.meta['cookiejar']}, headers=self.header, formdata={'TIMEBEGIN_SHOW': '2018-04-17', 'TIMEEND_SHOW': '2018-07-17', 'TIMEBEGIN': '2018-04-17',
+               'TIMEEND': '2018-07-17', 'DEAL_TIME': '04',
                'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '0', 'DEAL_CITY': '0',
                'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0', 'PAGENUMBER': str(self.page), 'FINDTXT': ''},
                                  callback=self.begin_parse)
 
 
-
     def begin_parse(self,response):
-        Cookie = response.headers.getlist('Set-Cookie')
+         # 请求Cookie
+        Cookie2 = response.request.headers.getlist('Cookie')
+        print('Cookie2==', Cookie2)
         items = []
         pageCount = response.xpath('//div[@class="paging"]/span/text()').extract()[0][1:-1]
         for each in response.xpath('//*[@id="publicl"]/div[@class="publicont"]'):
@@ -70,21 +76,27 @@ class QuanguoSpider(scrapy.Spider):
                 item['url'] = url[0]
             else:
                 item['url'] = ''
-            items.append(item)
-        for item in items:
-            yield scrapy.Request(url=item['url'], meta={'meta': item}, callback=self.detail_parse)
+            # items.append(item)
+            yield item
+        # for item in items:
+        #     yield scrapy.Request(url=item['url'], headers=self.header, meta={'meta': item}, callback=self.detail_parse)
 
         #请求下一页
         # if self.page < int(pageCount):
         #     self.page += 1
         #
-        # yield scrapy.FormRequest(url=self.url, method='POST', headers=self.header, formdata={'TIMEBEGIN_SHOW': '2018-04-16', 'TIMEEND_SHOW': '2018-07-16', 'TIMEBEGIN': '2018-04-16',
-        #        'TIMEEND': '2018-07-16', 'DEAL_TIME': '04',
+        # yield scrapy.FormRequest(url=self.url, method='POST',meta={'cookiejar':response.meta['cookiejar']}, headers=self.header, formdata={'TIMEBEGIN_SHOW': '2018-04-17', 'TIMEEND_SHOW': '2018-07-17', 'TIMEBEGIN': '2018-04-17',
+        #        'TIMEEND': '2018-07-17', 'DEAL_TIME': '04',
         #        'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '0', 'DEAL_CITY': '0',
         #        'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0', 'PAGENUMBER': str(self.page), 'FINDTXT': ''},
         #                          callback=self.begin_parse)
 
     # def detail_parse(self, response):
+    #     # print(response.body)
+    #     Cookie3 = response.headers.getlist('Set-Cookie')
+    #     print('Cookie3==', Cookie3)
+    #     Cookie4 = response.request.headers.getlist('Cookie')
+    #     print('Cookie4==', Cookie4)
     #     item = response.meta['meta']
     #     entryName = response.xpath('//div[@class="fully"]//div[@id="div_0201"]//li/a/@title').extract()
     #     if entryName:
@@ -92,3 +104,6 @@ class QuanguoSpider(scrapy.Spider):
     #     else:
     #         item['entryName'] = ''
     #     yield item
+
+
+
