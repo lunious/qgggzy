@@ -7,6 +7,7 @@ from selenium import webdriver
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
 
+
 class QuanguoSpider(scrapy.Spider):
     name = 'quanguo'
     allowed_domains = ['ggzy.gov.cn']
@@ -22,12 +23,12 @@ class QuanguoSpider(scrapy.Spider):
     }
 
     def __init__(self):
-        self.browser = webdriver.Chrome(executable_path='C:\demo\PY\qgggzy\chromedriver.exe')
-        super(QuanguoSpider,self).__init__()
-        dispatcher.connect(self.close,signals.spider_closed)
+        self.browser = webdriver.Chrome(executable_path='E:\Demos\PY\qgggzy\chromedriver.exe')
+        super(QuanguoSpider, self).__init__()
+        dispatcher.connect(self.close, signals.spider_closed)
 
-    def close(self,spider):
-        #当爬虫推出的时候关闭chrome
+    def close(self, spider):
+        # 当爬虫推出的时候关闭chrome
         print('spider closed')
         self.browser.quit()
 
@@ -103,10 +104,16 @@ class QuanguoSpider(scrapy.Spider):
         #                          callback=self.begin_parse)
 
     def detail_parse(self, response):
+        # print(response.body.decode("utf-8"))
         item = response.meta['meta']
-        entryName = response.xpath('//div[@class="detail"]/h4[@class="h4_o"]/text()').extract()
+        entryName = response.xpath('//div[@class="fully"]/h4[@class="h4_o"]/text()').extract()
+        entryNum = response.xpath('//div[@class="fully"]/p[@class="p_o"]/span[1]/text()').extract()
         if entryName:
             item['entryName'] = entryName[0]
         else:
             item['entryName'] = ''
+        if entryNum:
+            item['entryNum'] = entryNum[0][7:]
+        else:
+            item['entryNum'] = ''
         yield item
