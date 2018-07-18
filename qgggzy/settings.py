@@ -59,19 +59,7 @@ HTTPERROR_ALLOWED_CODES = [403]
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    'qgggzy.middlewares.QgggzyDownloaderMiddleware': 543,
-   'scrapy_splash.SplashCookiesMiddleware': 723,
-   'scrapy_splash.SplashMiddleware': 725,
-   'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
    'qgggzy.middlewares.JSPageMiddleware': 600,
-}
-# Splash服务器地址
-SPLASH_URL = 'http://localhost:8050'
-# 设置去重过滤器
-DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
-
-# 用来支持cache_args（可选）
-SPIDER_MIDDLEWARES = {
-    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
 }
 
 # Enable or disable extensions
@@ -85,7 +73,6 @@ SPIDER_MIDDLEWARES = {
 ITEM_PIPELINES = {
    # 'qgggzy.pipelines.SichuanPipeline': 300,
    'qgggzy.pipelines.QuanguoPipeline': 300,
-   # 'qgggzy.pipelines.QuanguoTXTPipeline': 400,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

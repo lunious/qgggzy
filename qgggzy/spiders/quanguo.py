@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from qgggzy.items import QuanguoItem
-from scrapy.selector import Selector
-from scrapy_splash import SplashRequest
 from selenium import webdriver
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
@@ -19,11 +17,11 @@ class QuanguoSpider(scrapy.Spider):
         'Cache-Control': 'max-age=0',
         'Content-Type': 'application/x-www-form-urlencoded',
         'Connection': 'keep - alive',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20',
     }
 
     def __init__(self):
-        self.browser = webdriver.Chrome(executable_path='E:\Demos\PY\qgggzy\chromedriver.exe')
+        self.browser = webdriver.Chrome(executable_path='C:\demo\PY\qgggzy\chromedriver.exe')
         super(QuanguoSpider, self).__init__()
         dispatcher.connect(self.close, signals.spider_closed)
 
@@ -94,8 +92,6 @@ class QuanguoSpider(scrapy.Spider):
         for item in items:
             yield scrapy.Request(url=item['url'], headers=self.header, meta={'meta_1': item},
                                  callback=self.detail_parse)
-            # yield SplashRequest(url=item['url'], args={'timeout', 10}, headers=self.header, meta={'meta': item},
-            #                     callback=self.detail_parse)
 
         # 下一页
         if self.page < int(pageCount):
@@ -112,7 +108,6 @@ class QuanguoSpider(scrapy.Spider):
                                  callback=self.begin_parse)
 
     def detail_parse(self, response):
-        # print(response.body.decode("utf-8"))
         items = []
         item = response.meta['meta_1']
         entryName = response.xpath('//div[@class="fully"]/h4[@class="h4_o"]/text()').extract()
