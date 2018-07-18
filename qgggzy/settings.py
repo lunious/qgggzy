@@ -59,7 +59,7 @@ HTTPERROR_ALLOWED_CODES = [403]
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    'qgggzy.middlewares.QgggzyDownloaderMiddleware': 543,
-   'qgggzy.middlewares.JSPageMiddleware': 600,
+   'qgggzy.middlewares.JSPageMiddleware': 543,
 }
 
 # Enable or disable extensions

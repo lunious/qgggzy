@@ -120,7 +120,9 @@ class JSPageMiddleware(object):
 
     def process_request(self, request, spider):
 
-        if spider.name == 'quanguo':
+        usedSelenium = request.meta.get('usedSelenium', False)
+
+        if usedSelenium:
             spider.browser.get(request.url)
             import time
             time.sleep(0)

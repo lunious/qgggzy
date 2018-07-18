@@ -11,6 +11,7 @@ class QuanguoSpider(scrapy.Spider):
     allowed_domains = ['ggzy.gov.cn']
     url = 'http://deal.ggzy.gov.cn/ds/deal/dealList.jsp'
     page = 1
+
     header = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
         'Accept-Language': 'zh,en-US;q=0.9,en;q=0.8,zh-CN;q=0.7',
@@ -31,11 +32,11 @@ class QuanguoSpider(scrapy.Spider):
         self.browser.quit()
 
     def start_requests(self):
-        yield scrapy.Request(url=self.url, headers=self.header, meta={'cookiejar': 1}, callback=self.parse)
+        yield scrapy.Request(url=self.url, headers=self.header, meta={'usedSelenium': True}, callback=self.parse)
 
     def parse(self, response):
 
-        yield scrapy.FormRequest(url=self.url, method='POST', meta={'cookiejar': response.meta['cookiejar']},
+        yield scrapy.FormRequest(url=self.url, method='POST', meta={'usedSelenium': True},
                                  headers=self.header,
                                  formdata={'TIMEBEGIN_SHOW': '2018-04-18', 'TIMEEND_SHOW': '2018-07-18',
                                            'TIMEBEGIN': '2018-04-18',
@@ -90,22 +91,22 @@ class QuanguoSpider(scrapy.Spider):
                 item['showUrl'] = ''
             items.append(item)
         for item in items:
-            yield scrapy.Request(url=item['url'], headers=self.header, meta={'meta_1': item},
+            yield scrapy.Request(url=item['url'], headers=self.header, meta={'meta_1': item, 'usedSelenium': True},
                                  callback=self.detail_parse)
 
         # 下一页
-        if self.page < int(pageCount):
-            self.page += 1
-
-        yield scrapy.FormRequest(url=self.url, method='POST',meta={'cookiejar':response.meta['cookiejar']}, headers=self.header,
-                                 formdata={'TIMEBEGIN_SHOW': '2018-04-18', 'TIMEEND_SHOW': '2018-07-18',
-                                           'TIMEBEGIN': '2018-04-18',
-                                           'TIMEEND': '2018-07-18', 'DEAL_TIME': '03',
-                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '440000',
-                                           'DEAL_CITY': '0',
-                                           'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
-                                           'PAGENUMBER': str(self.page), 'FINDTXT': ''},
-                                 callback=self.begin_parse)
+        # if self.page < int(pageCount):
+        #     self.page += 1
+        #
+        # yield scrapy.FormRequest(url=self.url, method='POST',meta={'cookiejar':response.meta['cookiejar'],'usedSelenium': True}, headers=self.header,
+        #                          formdata={'TIMEBEGIN_SHOW': '2018-04-18', 'TIMEEND_SHOW': '2018-07-18',
+        #                                    'TIMEBEGIN': '2018-04-18',
+        #                                    'TIMEEND': '2018-07-18', 'DEAL_TIME': '03',
+        #                                    'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '440000',
+        #                                    'DEAL_CITY': '0',
+        #                                    'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
+        #                                    'PAGENUMBER': str(self.page), 'FINDTXT': ''},
+        #                          callback=self.begin_parse)
 
     def detail_parse(self, response):
         items = []
@@ -124,7 +125,7 @@ class QuanguoSpider(scrapy.Spider):
         items.append(item)
 
         for item in items:
-            yield scrapy.Request(url=item['showUrl'], headers=self.header, meta={'meta_2': item},
+            yield scrapy.Request(url=item['showUrl'], headers=self.header, meta={'meta_2': item,'usedSelenium': True},
                                  callback=self.txt_parse)
 
     def txt_parse(self, response):
