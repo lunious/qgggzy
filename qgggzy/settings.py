@@ -84,6 +84,8 @@ SPIDER_MIDDLEWARES = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    # 'qgggzy.pipelines.SichuanPipeline': 300,
+   'qgggzy.pipelines.QuanguoPipeline': 300,
+   # 'qgggzy.pipelines.QuanguoTXTPipeline': 400,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -107,17 +109,17 @@ ITEM_PIPELINES = {
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-MYSQL_HOST = '101.37.30.136'  # ''120.78.161.254'  # 阿里云地址
-MYSQL_DBNAME = 'caiji_8_14'
-MYSQL_USER = 'root'
-MYSQL_PASSWD = 'adminroot1128'
-MYSQL_PORT = 8080
-
-# MYSQL_HOST = 'localhost'  # ''120.78.161.254'  # 阿里云地址
-# MYSQL_DBNAME = 'wscrapy'
+# MYSQL_HOST = '101.37.30.136'  # ''120.78.161.254'  # 阿里云地址
+# MYSQL_DBNAME = 'caiji_8_14'
 # MYSQL_USER = 'root'
-# MYSQL_PASSWD = 'Wzy562400.'
-# MYSQL_PORT = 3306
+# MYSQL_PASSWD = 'adminroot1128'
+# MYSQL_PORT = 8080
+
+MYSQL_HOST = 'localhost'  # ''120.78.161.254'  # 阿里云地址
+MYSQL_DBNAME = 'wscrapy'
+MYSQL_USER = 'root'
+MYSQL_PASSWD = 'Wzy562400.'
+MYSQL_PORT = 3306
 
 MY_PROXY = [
     'http://182.140.138.20',

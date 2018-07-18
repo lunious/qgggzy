@@ -119,6 +119,7 @@ class QgggzyDownloaderMiddleware(object):
 class JSPageMiddleware(object):
 
     def process_request(self, request, spider):
+        # if spider.name == 'quanguo':
         if spider.name == 'quanguo':
             spider.browser.get(request.url)
             import time

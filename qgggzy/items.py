@@ -74,3 +74,4 @@ class QuanguoItem(scrapy.Item):
     label = scrapy.Field()
     tempLabelName = scrapy.Field()
     entityUrl = scrapy.Field()
+    txt = scrapy.Field()

@@ -39,10 +39,10 @@ class QuanguoSpider(scrapy.Spider):
 
         yield scrapy.FormRequest(url=self.url, method='POST', meta={'cookiejar': response.meta['cookiejar']},
                                  headers=self.header,
-                                 formdata={'TIMEBEGIN_SHOW': '2018-04-17', 'TIMEEND_SHOW': '2018-07-17',
-                                           'TIMEBEGIN': '2018-04-17',
-                                           'TIMEEND': '2018-07-17', 'DEAL_TIME': '04',
-                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '0',
+                                 formdata={'TIMEBEGIN_SHOW': '2018-04-18', 'TIMEEND_SHOW': '2018-07-18',
+                                           'TIMEBEGIN': '2018-04-18',
+                                           'TIMEEND': '2018-07-18', 'DEAL_TIME': '03',
+                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '440000',
                                            'DEAL_CITY': '0',
                                            'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
                                            'PAGENUMBER': str(self.page), 'FINDTXT': ''},
@@ -86,26 +86,35 @@ class QuanguoSpider(scrapy.Spider):
             url = each.xpath('.//h4/a/@href').extract()
             if url:
                 item['url'] = url[0]
+                item['showUrl'] = url[0].replace('/a/', '/b/')
             else:
                 item['url'] = ''
+                item['showUrl'] = ''
             items.append(item)
         for item in items:
-            yield scrapy.Request(url=item['url'], headers=self.header, meta={'meta': item}, callback=self.detail_parse)
+            yield scrapy.Request(url=item['url'], headers=self.header, meta={'meta_1': item},
+                                 callback=self.detail_parse)
             # yield SplashRequest(url=item['url'], args={'timeout', 10}, headers=self.header, meta={'meta': item},
             #                     callback=self.detail_parse)
-        # 请求下一页
-        # if self.page < int(pageCount):
-        #     self.page += 1
-        #
-        # yield scrapy.FormRequest(url=self.url, method='POST',meta={'cookiejar':response.meta['cookiejar']}, headers=self.header, formdata={'TIMEBEGIN_SHOW': '2018-04-17', 'TIMEEND_SHOW': '2018-07-17', 'TIMEBEGIN': '2018-04-17',
-        #        'TIMEEND': '2018-07-17', 'DEAL_TIME': '04',
-        #        'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '0', 'DEAL_CITY': '0',
-        #        'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0', 'PAGENUMBER': str(self.page), 'FINDTXT': ''},
-        #                          callback=self.begin_parse)
+
+        # 下一页
+        if self.page < int(pageCount):
+            self.page += 1
+
+        yield scrapy.FormRequest(url=self.url, method='POST',meta={'cookiejar':response.meta['cookiejar']}, headers=self.header,
+                                 formdata={'TIMEBEGIN_SHOW': '2018-04-18', 'TIMEEND_SHOW': '2018-07-18',
+                                           'TIMEBEGIN': '2018-04-18',
+                                           'TIMEEND': '2018-07-18', 'DEAL_TIME': '03',
+                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0001', 'DEAL_PROVINCE': '440000',
+                                           'DEAL_CITY': '0',
+                                           'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
+                                           'PAGENUMBER': str(self.page), 'FINDTXT': ''},
+                                 callback=self.begin_parse)
 
     def detail_parse(self, response):
         # print(response.body.decode("utf-8"))
-        item = response.meta['meta']
+        items = []
+        item = response.meta['meta_1']
         entryName = response.xpath('//div[@class="fully"]/h4[@class="h4_o"]/text()').extract()
         entryNum = response.xpath('//div[@class="fully"]/p[@class="p_o"]/span[1]/text()').extract()
         if entryName:
@@ -116,4 +125,20 @@ class QuanguoSpider(scrapy.Spider):
             item['entryNum'] = entryNum[0][7:]
         else:
             item['entryNum'] = ''
+
+        items.append(item)
+
+        for item in items:
+            yield scrapy.Request(url=item['showUrl'], headers=self.header, meta={'meta_2': item},
+                                 callback=self.txt_parse)
+
+    def txt_parse(self, response):
+        item = response.meta['meta_2']
+
+        mHtml = response.xpath('//*[@id="mycontent"]/*').extract()
+
+        if mHtml:
+            item['txt'] = mHtml[0]
+        else:
+            item['txt'] = response.body.decode("utf-8")
         yield item
