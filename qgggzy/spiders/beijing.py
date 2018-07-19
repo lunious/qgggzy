@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class QuanguoSpider(scrapy.Spider):
-    name = 'quanguo'
+    name = 'beijing'
     allowed_domains = ['ggzy.gov.cn']
     url = 'http://deal.ggzy.gov.cn/ds/deal/dealList.jsp'
     page = 1
@@ -50,7 +50,7 @@ class QuanguoSpider(scrapy.Spider):
                                  formdata={'TIMEBEGIN_SHOW': '2018-04-19', 'TIMEEND_SHOW': '2018-07-19',
                                            'TIMEBEGIN': '2018-04-19',
                                            'TIMEEND': '2018-07-19', 'DEAL_TIME': '03',
-                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '0',
+                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '110000',
                                            'DEAL_CITY': '0',
                                            'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
                                            'PAGENUMBER': str(self.page), 'FINDTXT': ''},
@@ -116,7 +116,7 @@ class QuanguoSpider(scrapy.Spider):
                                  formdata={'TIMEBEGIN_SHOW': '2018-04-19', 'TIMEEND_SHOW': '2018-07-19',
                                            'TIMEBEGIN': '2018-04-19',
                                            'TIMEEND': '2018-07-19', 'DEAL_TIME': '03',
-                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '0',
+                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '110000',
                                            'DEAL_CITY': '0',
                                            'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
                                            'PAGENUMBER': str(self.page), 'FINDTXT': ''}, callback=self.parse, dont_filter=True)

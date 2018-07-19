@@ -8,6 +8,7 @@
 from scrapy import signals
 import random
 from scrapy.http import HtmlResponse
+import time
 
 
 class QgggzySpiderMiddleware(object):
@@ -125,7 +126,7 @@ class JSPageMiddleware(object):
         if usedSelenium:
             spider.browser.get(request.url)
             import time
-            time.sleep(0)
+            time.sleep(2)
             print('访问:{0}'.format(request.url))
 
             return HtmlResponse(url=spider.browser.current_url, body=spider.browser.page_source, encoding='utf-8',

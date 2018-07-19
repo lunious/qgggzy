@@ -58,17 +58,6 @@ class SichuanPipeline(object):
                 self.connect.commit()
             except Exception as error:
                 logging.log(error)
-            # try:
-            # self.cursor.execute("update sggjy set sggjyzbjgId=(select id from sggjyzbjg  where sggjyzbjg.url = sggjy.url)")
-            # self.cursor.execute("select sggjyzbjgId from sggjy where url = %s", item['url'])
-            # result = self.cursor.fetchone()
-            # if result == None:
-            #     self.cursor.execute("update sggjy set sggjyzbjgId=(select id from sggjyzbjg  where sggjyzbjg.url = sggjy.url)")
-            # else:
-            #     print(result[0])
-            # self.connect.commit()
-            # except Exception as error:
-            #     logging.log(error)
             return item
 
     def close_spider(self, spider):
@@ -93,7 +82,7 @@ class QuanguoPipeline(object):
     def process_item(self, item, spider):
 
         # 指定目录的路径
-        parentFilename = './Data/'
+        parentFilename = './Data/{0}'.format(item['area'])
 
         # 如果目录不存在，则拆创建目录
         if (not os.path.exists(parentFilename)):
@@ -120,10 +109,10 @@ class QuanguoPipeline(object):
 
             try:
                 self.cursor.execute(
-                    "select id from qgggjy where url = %s",item['url']
+                    "select id from qgggjy where url = %s", item['url']
                 )
                 result = self.cursor.fetchone()
-                fp = open(parentFilename + str(result[0]) + '.txt', 'wb')
+                fp = open(parentFilename + '/'+str(result[0]) + '.txt', 'wb')
                 fp.write(item['txt'].encode('utf-8'))
                 fp.close()
             except Exception as error:
@@ -134,5 +123,3 @@ class QuanguoPipeline(object):
 
     def close_spider(self, spider):
         self.connect.close()
-
-

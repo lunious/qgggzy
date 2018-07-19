@@ -59,7 +59,7 @@ HTTPERROR_ALLOWED_CODES = [403]
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    'qgggzy.middlewares.QgggzyDownloaderMiddleware': 543,
-   'qgggzy.middlewares.JSPageMiddleware': 543,
+   'qgggzy.middlewares.JSPageMiddleware': 600,
 }
 
 # Enable or disable extensions
@@ -129,3 +129,10 @@ MY_USER_AGENT = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20",
     "Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; fr) Presto/2.9.168 Version/11.52",
 ]
+
+# ----------- selenium参数配置 -------------
+SELENIUM_TIMEOUT = 60           # selenium浏览器的超时时间，单位秒
+LOAD_IMAGE = False               # 是否下载图片
+WINDOW_HEIGHT = 900             # 浏览器窗口大小
+WINDOW_WIDTH = 900
+
