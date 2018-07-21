@@ -6,10 +6,11 @@ from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
 from scrapy.utils.project import get_project_settings
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.options import Options
 
-
+# 吉林
 class QuanguoSpider(scrapy.Spider):
-    name = 'tianjing'
+    name = 'jilin'
     allowed_domains = ['ggzy.gov.cn']
     url = 'http://deal.ggzy.gov.cn/ds/deal/dealList.jsp'
     page = 1
@@ -19,38 +20,42 @@ class QuanguoSpider(scrapy.Spider):
         'Accept-Language': 'zh,en-US;q=0.9,en;q=0.8,zh-CN;q=0.7',
         'Cache-Control': 'max-age=0',
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Connection': 'keep - alive',
+        'Connection': 'keep-alive',
+        'Accept-Encoding': 'gzip, deflate',
+        'Upgrade-Insecure-Requests': '1',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20',
     }
 
-    def __init__(self, timeout=30, isLoadImage=True, windowHeight=None, windowWidth=None):
+    def __init__(self):
         # 从settings.py中获取设置参数
+        options = Options()
+        options.add_argument('-headless')  # 无头参数
         self.mySetting = get_project_settings()
         self.timeout = self.mySetting['SELENIUM_TIMEOUT']
         self.isLoadImage = self.mySetting['LOAD_IMAGE']
         self.windowHeight = self.mySetting['WINDOW_HEIGHT']
         self.windowWidth = self.mySetting['windowWidth']
         # 初始化chrome对象
-        self.browser = webdriver.Chrome(executable_path='E:\Demos\PY\qgggzy\chromedriver.exe')
+        self.browser = webdriver.Chrome(executable_path=r'C:\software\chromedriver.exe', chrome_options=options)
         if self.windowHeight and self.windowWidth:
             self.browser.set_window_size(600, 600)
-        self.browser.set_page_load_timeout(self.timeout)        # 页面加载超时时间
-        self.wait = WebDriverWait(self.browser, 60)             # 指定元素加载超时时间
+        self.browser.set_page_load_timeout(self.timeout)  # 页面加载超时时间
+        self.wait = WebDriverWait(self.browser, 60)  # 指定元素加载超时时间
         super(QuanguoSpider, self).__init__()
         dispatcher.connect(self.close, signals.spider_closed)
 
     def close(self, spider):
-        # 当爬虫推出的时候关闭chrome
+        # 当爬虫退出的时候关闭chrome
         print('spider closed')
         self.browser.quit()
 
     def start_requests(self):
         yield scrapy.FormRequest(url=self.url, method='POST', meta={'usedSelenium': False},
                                  headers=self.header,
-                                 formdata={'TIMEBEGIN_SHOW': '2018-04-19', 'TIMEEND_SHOW': '2018-07-19',
-                                           'TIMEBEGIN': '2018-04-19',
-                                           'TIMEEND': '2018-07-19', 'DEAL_TIME': '03',
-                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '120000',
+                                 formdata={'TIMEBEGIN_SHOW': '2018-04-21', 'TIMEEND_SHOW': '2018-07-21',
+                                           'TIMEBEGIN': '2018-04-21',
+                                           'TIMEEND': '2018-07-21', 'DEAL_TIME': '02',
+                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '220000',
                                            'DEAL_CITY': '0',
                                            'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
                                            'PAGENUMBER': str(self.page), 'FINDTXT': ''},
@@ -109,17 +114,17 @@ class QuanguoSpider(scrapy.Spider):
         if self.page < int(pageCount):
             self.page += 1
 
-
         yield scrapy.FormRequest(url=self.url, method='POST',
                                  meta={'usedSelenium': False},
                                  headers=self.header,
-                                 formdata={'TIMEBEGIN_SHOW': '2018-04-19', 'TIMEEND_SHOW': '2018-07-19',
-                                           'TIMEBEGIN': '2018-04-19',
-                                           'TIMEEND': '2018-07-19', 'DEAL_TIME': '03',
-                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '120000',
+                                 formdata={'TIMEBEGIN_SHOW': '2018-04-21', 'TIMEEND_SHOW': '2018-07-21',
+                                           'TIMEBEGIN': '2018-04-21',
+                                           'TIMEEND': '2018-07-21', 'DEAL_TIME': '02',
+                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '220000',
                                            'DEAL_CITY': '0',
                                            'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
-                                           'PAGENUMBER': str(self.page), 'FINDTXT': ''}, callback=self.parse, dont_filter=True)
+                                           'PAGENUMBER': str(self.page), 'FINDTXT': ''}, callback=self.parse,
+                                 dont_filter=True)
 
     def detail_parse(self, response):
         items = []

@@ -8,46 +8,6 @@
 import scrapy
 
 
-# 四川省(中标公示)
-class SichuanGSItem(scrapy.Item):
-    reportTitle = scrapy.Field()
-    sysTime = scrapy.Field()
-    url = scrapy.Field()
-    entryName = scrapy.Field()
-    entryOwner = scrapy.Field()
-    ownerTel = scrapy.Field()
-    tenderee = scrapy.Field()
-    tendereeTel = scrapy.Field()
-    biddingAgency = scrapy.Field()
-    biddingAgencTel = scrapy.Field()
-    placeAddress = scrapy.Field()
-    placeTime = scrapy.Field()
-    publicityPeriod = scrapy.Field()
-    bigPrice = scrapy.Field()
-    changeReason = scrapy.Field()
-    oneTree = scrapy.Field()
-    twoTree = scrapy.Field()
-    threeTree = scrapy.Field()
-    treeCount = scrapy.Field()
-    oneCompany = scrapy.Field()
-    onePrice = scrapy.Field()
-    oneReviewPrice = scrapy.Field()
-    oneScore = scrapy.Field()
-    count = scrapy.Field()
-    treeCount = scrapy.Field()
-
-# 四川省（结果公告）
-class SichuanGGItem(scrapy.Item):
-    reportTitle = scrapy.Field()
-    url = scrapy.Field()
-    resource = scrapy.Field()
-    sysTime = scrapy.Field()
-    entryName = scrapy.Field()
-    entryNum = scrapy.Field()
-    purchasingType = scrapy.Field()
-    Purchaser = scrapy.Field()
-    purchasingAgent = scrapy.Field()
-
 # 全国
 class QuanguoItem(scrapy.Item):
     area = scrapy.Field()

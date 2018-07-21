@@ -120,7 +120,6 @@ class QgggzyDownloaderMiddleware(object):
 class JSPageMiddleware(object):
 
     def process_request(self, request, spider):
-
         usedSelenium = request.meta.get('usedSelenium', False)
 
         if usedSelenium:
