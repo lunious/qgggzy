@@ -136,3 +136,6 @@ LOAD_IMAGE = False               # 是否下载图片
 WINDOW_HEIGHT = 900             # 浏览器窗口大小
 WINDOW_WIDTH = 900
 
+# -------------- chromedriver路径 -----------
+CHROMEDRIVER_PATH = r'C:\software\chromedriver.exe'
+

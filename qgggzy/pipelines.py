@@ -113,10 +113,9 @@ class QuanguoPipeline(object):
         # 指定目录的路径
         parentFilename = './Data/{0}'.format(item['pcode'])
 
-        # 如果目录不存在，则拆创建目录
+        # 如果目录不存在，则创建目录
         if (not os.path.exists(parentFilename)):
             os.makedirs(parentFilename)
-        print(item['entryName'])
 
         for i in new_nameWord_id.keys():
             for j in new_nameWord_id.get(i).split():
@@ -124,9 +123,10 @@ class QuanguoPipeline(object):
                     if i not in id:
                         id += i + ','
 
-        for m in id[:-1].split(','):
-            if id_name.get(m) not in name:
-                name += id_name.get(m) + ','
+        if id.endswith(','):
+            for m in id[:-1].split(','):
+                if id_name.get(m) not in name:
+                    name += id_name.get(m) + ','
 
         for n in new_keyWord_id.keys():
             for o in new_keyWord_id.get(n).split():
@@ -134,10 +134,10 @@ class QuanguoPipeline(object):
                     if n not in id:
                         id += n + ','
 
-        for q in id[:-1].split(','):
-            if id_name.get(q) not in name:
-                name += id_name.get(q) + ','
-
+        if id.endswith(','):
+            for q in id[:-1].split(','):
+                if id_name.get(q) not in name:
+                    name += id_name.get(q) + ','
         if id:
             item['label'] = id[:-1]
         else:
@@ -146,6 +146,13 @@ class QuanguoPipeline(object):
             item['tempLabelName'] = name[:-1]
         else:
             item['tempLabelName'] = ''
+
+        # 公告
+        if item['entryType'] in ['采购/资审公告', '交易公告', '招标/资审公告']:
+            print('这条是公告')
+        # 公示
+        if item['entryType'] in ['中标公告', '交易结果公示', '成交公示']:
+            print('这天是公示')
 
         if item['entryName'] != '':
             try:
@@ -165,10 +172,10 @@ class QuanguoPipeline(object):
                      item['label'],
                      item['tempLabelName'],
                      ))
+
                 self.connect.commit()
             except Exception as error:
                 logging.log(error)
-
             try:
                 self.cursor.execute(
                     "select id from qgggjy where url = %s", item['url']
@@ -177,10 +184,9 @@ class QuanguoPipeline(object):
                 fp = open(parentFilename + '/' + str(result[0]) + '.txt', 'wb')
                 fp.write(item['txt'].encode('utf-8'))
                 fp.close()
+                self.connect.commit()
             except Exception as error:
                 logging.log(error)
-
-            self.connect.commit()
             return item
 
     def close_spider(self, spider):

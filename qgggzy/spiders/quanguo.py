@@ -500,15 +500,15 @@ class QuanguoSpider(scrapy.Spider):
                 }
         }
         options.add_experimental_option('prefs', prefs)
-
         options.add_argument('-headless')  # 无头参数
         self.mySetting = get_project_settings()
         self.timeout = self.mySetting['SELENIUM_TIMEOUT']
         self.isLoadImage = self.mySetting['LOAD_IMAGE']
         self.windowHeight = self.mySetting['WINDOW_HEIGHT']
         self.windowWidth = self.mySetting['windowWidth']
+        self.chromePath = self.mySetting['CHROMEDRIVER_PATH']
         # 初始化chrome对象
-        self.browser = webdriver.Chrome(executable_path=r'D:\rj\chromedriver.exe', chrome_options=options)
+        self.browser = webdriver.Chrome(executable_path=self.chromePath, chrome_options=options)
         if self.windowHeight and self.windowWidth:
             self.browser.set_window_size(600, 600)
         self.browser.set_page_load_timeout(self.timeout)  # 页面加载超时时间
@@ -535,8 +535,6 @@ class QuanguoSpider(scrapy.Spider):
 
     def parse(self, response):
         items = []
-        id = ''
-        name = ''
         pageCount = response.xpath('//div[@class="paging"]/span/text()').extract()[0][1:-1]
         for each in response.xpath('//*[@id="publicl"]/div[@class="publicont"]'):
 
@@ -554,6 +552,8 @@ class QuanguoSpider(scrapy.Spider):
             for name in self.new_pcityDic.keys():
                 if name in item['lypt']:
                     item['city'] = self.new_pcityDic.get(name)
+                else:
+                    item['city'] = '其它'
             sysTime = each.xpath('.//h4/span[@class="span_o"]/text()').extract()
             if sysTime:
                 item['sysTime'] = sysTime[0]
