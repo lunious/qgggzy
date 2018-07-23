@@ -4,6 +4,7 @@ import os
 
 min = [
     'scrapy crawl quanguo',
+    'scrapy crawl beijing',
 ]
 # cmdline.execute(min[0].split())
 
@@ -13,4 +14,4 @@ min = [
 while True:
     print('开始执行')
     os.system(min[0])
-    time.sleep(1)
+    time.sleep(10)

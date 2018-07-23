@@ -149,45 +149,110 @@ class QuanguoPipeline(object):
 
         # 公告
         if item['entryType'] in ['采购/资审公告', '交易公告', '招标/资审公告']:
-            print('这条是公告')
+            if item['entryName'] != '':
+                try:
+                    self.cursor.execute(
+                        "insert into qgggjy (area,city,lypt,sysTime,type,entryType,entryHy,url,showUrl,entryName,entryNum,label,tempLabelName) value(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE entryName = entryName",
+                        (item['area'],
+                         item['city'],
+                         item['lypt'],
+                         item['sysTime'],
+                         item['type'],
+                         item['entryType'],
+                         item['entryHy'],
+                         item['url'],
+                         item['showUrl'],
+                         item['entryName'],
+                         item['entryNum'],
+                         item['label'],
+                         item['tempLabelName'],
+                         ))
+                    self.connect.commit()
+                except Exception as error:
+                    logging.log(error)
+                try:
+                    self.cursor.execute(
+                        "select id from qgggjy where url = %s", item['url']
+                    )
+                    result = self.cursor.fetchone()
+                    fp = open(parentFilename + '/' + str(result[0]) + '.txt', 'wb')
+                    fp.write(item['txt'].encode('utf-8'))
+                    fp.close()
+                    self.connect.commit()
+                except Exception as error:
+                    logging.log(error)
+                return item
         # 公示
-        if item['entryType'] in ['中标公告', '交易结果公示', '成交公示']:
-            print('这天是公示')
+        elif item['entryType'] in ['中标公告', '交易结果公示', '成交公示']:
+            if item['entryName'] != '':
+                try:
+                    self.cursor.execute(
+                        "insert into qgggjy (area,city,lypt,sysTime,type,entryType,entryHy,url,showUrl,entryName,entryNum,label,tempLabelName) value(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE entryName = entryName",
+                        (item['area'],
+                         item['city'],
+                         item['lypt'],
+                         item['sysTime'],
+                         item['type'],
+                         item['entryType'],
+                         item['entryHy'],
+                         item['url'],
+                         item['showUrl'],
+                         item['entryName'],
+                         item['entryNum'],
+                         item['label'],
+                         item['tempLabelName'],
+                         ))
 
-        if item['entryName'] != '':
-            try:
-                self.cursor.execute(
-                    "insert into qgggjy (area,city,lypt,sysTime,type,entryType,entryHy,url,showUrl,entryName,entryNum,label,tempLabelName) value(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE entryName = entryName",
-                    (item['area'],
-                     item['city'],
-                     item['lypt'],
-                     item['sysTime'],
-                     item['type'],
-                     item['entryType'],
-                     item['entryHy'],
-                     item['url'],
-                     item['showUrl'],
-                     item['entryName'],
-                     item['entryNum'],
-                     item['label'],
-                     item['tempLabelName'],
-                     ))
+                    self.connect.commit()
+                except Exception as error:
+                    logging.log(error)
+                try:
+                    self.cursor.execute(
+                        "select id from qgggjy where url = %s", item['url']
+                    )
+                    result = self.cursor.fetchone()
+                    fp = open(parentFilename + '/' + str(result[0]) + '.txt', 'wb')
+                    fp.write(item['txt'].encode('utf-8'))
+                    fp.close()
+                    self.connect.commit()
+                except Exception as error:
+                    logging.log(error)
+                return item
+        else:
+            if item['entryName'] != '':
+                try:
+                    self.cursor.execute(
+                        "insert into qgggjy (area,city,lypt,sysTime,type,entryType,entryHy,url,showUrl,entryName,entryNum,label,tempLabelName) value(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE entryName = entryName",
+                        (item['area'],
+                         item['city'],
+                         item['lypt'],
+                         item['sysTime'],
+                         item['type'],
+                         item['entryType'],
+                         item['entryHy'],
+                         item['url'],
+                         item['showUrl'],
+                         item['entryName'],
+                         item['entryNum'],
+                         item['label'],
+                         item['tempLabelName'],
+                         ))
 
-                self.connect.commit()
-            except Exception as error:
-                logging.log(error)
-            try:
-                self.cursor.execute(
-                    "select id from qgggjy where url = %s", item['url']
-                )
-                result = self.cursor.fetchone()
-                fp = open(parentFilename + '/' + str(result[0]) + '.txt', 'wb')
-                fp.write(item['txt'].encode('utf-8'))
-                fp.close()
-                self.connect.commit()
-            except Exception as error:
-                logging.log(error)
-            return item
+                    self.connect.commit()
+                except Exception as error:
+                    logging.log(error)
+                try:
+                    self.cursor.execute(
+                        "select id from qgggjy where url = %s", item['url']
+                    )
+                    result = self.cursor.fetchone()
+                    fp = open(parentFilename + '/' + str(result[0]) + '.txt', 'wb')
+                    fp.write(item['txt'].encode('utf-8'))
+                    fp.close()
+                    self.connect.commit()
+                except Exception as error:
+                    logging.log(error)
+                return item
 
     def close_spider(self, spider):
         self.connect.close()
