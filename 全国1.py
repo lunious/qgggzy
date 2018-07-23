@@ -13,4 +13,4 @@ min = [
 while True:
     print('开始执行')
     os.system(min[0])
-    time.sleep(4)
+    time.sleep(1)

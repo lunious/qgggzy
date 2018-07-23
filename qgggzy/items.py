@@ -35,3 +35,4 @@ class QuanguoItem(scrapy.Item):
     tempLabelName = scrapy.Field()
     entityUrl = scrapy.Field()
     txt = scrapy.Field()
+    pcode = scrapy.Field()
