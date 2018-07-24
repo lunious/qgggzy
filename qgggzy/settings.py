@@ -71,7 +71,6 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   # 'qgggzy.pipelines.SichuanPipeline': 300,
    'qgggzy.pipelines.QuanguoPipeline': 300,
 }
 
@@ -137,5 +136,5 @@ WINDOW_HEIGHT = 900             # 浏览器窗口大小
 WINDOW_WIDTH = 900
 
 # -------------- chromedriver路径 -----------
-CHROMEDRIVER_PATH = r'C:\software\chromedriver.exe'
+CHROMEDRIVER_PATH = r'D:\rj\chromedriver.exe'
 

@@ -478,7 +478,6 @@ class QuanguoSpider(scrapy.Spider):
 
     new_pcityDic = {v: k for k, v in pcityDic.items()}
 
-
     header = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
         'Accept-Language': 'zh,en-US;q=0.9,en;q=0.8,zh-CN;q=0.7',
@@ -543,17 +542,12 @@ class QuanguoSpider(scrapy.Spider):
             if area:
                 item['area'] = area[0]
             else:
-                item['area'] = ''
+                item['area'] = '其它'
             lypt = each.xpath('.//p[@class="p_tw"]/span[4]/text()').extract()
             if lypt:
                 item['lypt'] = lypt[0]
             else:
                 item['lypt'] = ''
-            for name in self.new_pcityDic.keys():
-                if name in item['lypt']:
-                    item['city'] = self.new_pcityDic.get(name)
-                else:
-                    item['city'] = '其它'
             sysTime = each.xpath('.//h4/span[@class="span_o"]/text()').extract()
             if sysTime:
                 item['sysTime'] = sysTime[0]
@@ -594,20 +588,20 @@ class QuanguoSpider(scrapy.Spider):
                                  callback=self.detail_parse)
 
         # 下一页
-        if self.page < int(pageCount):
-            self.page += 1
-
-        yield scrapy.FormRequest(url=self.url, method='POST',
-                                 meta={'usedSelenium': True},
-                                 headers=self.header,
-                                 formdata={'TIMEBEGIN_SHOW': '2018-04-21', 'TIMEEND_SHOW': '2018-07-21',
-                                           'TIMEBEGIN': '2018-04-21',
-                                           'TIMEEND': '2018-07-21', 'DEAL_TIME': '04',
-                                           'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '0',
-                                           'DEAL_CITY': '0',
-                                           'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
-                                           'PAGENUMBER': str(self.page), 'FINDTXT': ''}, callback=self.parse,
-                                 dont_filter=True)
+        # if self.page < int(pageCount):
+        #     self.page += 1
+        #
+        # yield scrapy.FormRequest(url=self.url, method='POST',
+        #                          meta={'usedSelenium': True},
+        #                          headers=self.header,
+        #                          formdata={'TIMEBEGIN_SHOW': '2018-04-21', 'TIMEEND_SHOW': '2018-07-21',
+        #                                    'TIMEBEGIN': '2018-04-21',
+        #                                    'TIMEEND': '2018-07-21', 'DEAL_TIME': '04',
+        #                                    'DEAL_CLASSIFY': '00', 'DEAL_STAGE': '0000', 'DEAL_PROVINCE': '0',
+        #                                    'DEAL_CITY': '0',
+        #                                    'DEAL_PLATFORM': '0', 'DEAL_TRADE': '0', 'isShowAll': '0',
+        #                                    'PAGENUMBER': str(self.page), 'FINDTXT': ''}, callback=self.parse,
+        #                          dont_filter=True)
 
     def detail_parse(self, response):
         items = []
@@ -617,9 +611,15 @@ class QuanguoSpider(scrapy.Spider):
             item['entryNum'] = entryNum[0][7:]
         else:
             item['entryNum'] = ''
+
+        item['pcode'] = '0000'
         for name in self.pcodeDic.keys():
             if name == item['area']:
                 item['pcode'] = self.pcodeDic.get(name)
+        item['city'] = '其它'
+        for name in self.new_pcityDic.keys():
+            if name in item['lypt']:
+                item['city'] = self.new_pcityDic.get(name)
         items.append(item)
 
         for item in items:

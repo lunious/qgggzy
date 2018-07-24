@@ -110,6 +110,7 @@ class QuanguoPipeline(object):
         id = ''
         name = ''
 
+
         # 指定目录的路径
         parentFilename = './Data/{0}'.format(item['pcode'])
 
@@ -167,10 +168,6 @@ class QuanguoPipeline(object):
                          item['label'],
                          item['tempLabelName'],
                          ))
-                    self.connect.commit()
-                except Exception as error:
-                    logging.log(error)
-                try:
                     self.cursor.execute(
                         "select id from qgggjy where url = %s", item['url']
                     )
@@ -202,11 +199,6 @@ class QuanguoPipeline(object):
                          item['label'],
                          item['tempLabelName'],
                          ))
-
-                    self.connect.commit()
-                except Exception as error:
-                    logging.log(error)
-                try:
                     self.cursor.execute(
                         "select id from qgggjy where url = %s", item['url']
                     )
@@ -237,11 +229,6 @@ class QuanguoPipeline(object):
                          item['label'],
                          item['tempLabelName'],
                          ))
-
-                    self.connect.commit()
-                except Exception as error:
-                    logging.log(error)
-                try:
                     self.cursor.execute(
                         "select id from qgggjy where url = %s", item['url']
                     )
@@ -249,6 +236,7 @@ class QuanguoPipeline(object):
                     fp = open(parentFilename + '/' + str(result[0]) + '.txt', 'wb')
                     fp.write(item['txt'].encode('utf-8'))
                     fp.close()
+
                     self.connect.commit()
                 except Exception as error:
                     logging.log(error)
